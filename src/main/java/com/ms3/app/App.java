@@ -11,7 +11,7 @@ public class App {
 
     public static void main(String[] args) {
         boolean runProgram = true;
-        while (runProgram){
+        while (runProgram){ // keep running program until user terminates
             printMenu();
             runProgram = getMenuInput();
         }
@@ -32,6 +32,17 @@ public class App {
             System.err.println("Directory Already Exists. OverWrite?");
             if(Input.yesNo()) {
                 parseDataToDB();
+            }
+        }
+    }
+
+    /** deletes empty directory if file parsing fails **/
+    public static void deleteDirectory(File directoryToBeDeleted) {
+        File[] allContents = directoryToBeDeleted.listFiles();  // verify folder is empty
+        assert allContents != null;
+        if (allContents.length == 0) {
+            if (directoryToBeDeleted.delete()) {
+                System.err.println("Reverting Process Try Again");
             }
         }
     }
@@ -65,9 +76,11 @@ public class App {
         System.out.println("Enter your CSV file path: ");
         String input = Input.getString(); // scanner to get user input
         File tempFile = new File(input); // gets file from input
+
         if (!tempFile.getName().toLowerCase().endsWith(".csv")){    // verifies file is CSV extension
             System.err.println("Invalid File Type CSV Required");
-        }else{
+        }
+        else{
             file = tempFile;
             fname = FilenameUtils.removeExtension(file.getName().toLowerCase()); // get filename w/out extension
             createDirectory(fname); // creates directory from filename
@@ -77,20 +90,26 @@ public class App {
     /** driving method  **/
     public static void parseDataToDB(){
         // initialize CSV Parser to read the csv and validate data
-        CsvParser csvParser = new CsvParser(fname);
-        csvParser.readCSV(file);
-        csvParser.processVerifiedData();
+        try {
+            CsvParser csvParser = new CsvParser(fname);
+            csvParser.readCSV(file);
+            csvParser.processVerifiedData();
 
-        /* initialize SQLite DB, Table and insert valid data into DB */
-        CsvSQLiteDao csvDao = new CsvSQLiteDao(fname);
-        csvDao.createDB();
-        csvDao.createTable(csvParser.getHeaders());
-        csvDao.insert(csvParser.getDbCsv());
+            /* initialize SQLite DB, Table and insert valid data into DB */
+            CsvSQLiteDao csvDao = new CsvSQLiteDao(fname);
+            csvDao.createDB();
+            csvDao.createTable(csvParser.getHeaders());
+            csvDao.insert(csvParser.getDbCsv());
 
-        /* writes files into directory */
-        csvParser.writeFailedCsv();
-        csvParser.writeLogFile();
-        System.out.println("Files stored in directory: "+fname);
-        System.out.println("----------");
+            /* writes files into directory */
+            csvParser.writeFailedCsv();
+            csvParser.writeLogFile();
+            System.out.println("Files stored in directory: " + fname);
+            System.out.println("----------");
+        }catch (Exception e){
+            File directory = new File(fname);
+            deleteDirectory(directory);
+            System.err.println("Error Loading file / File Not Found");
+        }
     }
 }

@@ -26,12 +26,12 @@ public class CsvParser {
 
     /** reads CSV and creates a List of String[] from each row **/
     public void readCSV(File fileName){
-        System.out.println(ANSI_BLUE +"Reading CSV Data"+ANSI_RESET);
         try (CSVReader reader = new CSVReader(new FileReader(fileName))) {
+            System.out.println(ANSI_BLUE +"Reading CSV Data"+ANSI_RESET);
             setrCsv(reader.readAll());
             setReceived(rCsv.size()-1);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 
@@ -61,7 +61,7 @@ public class CsvParser {
             writer.writeAll(badCsv);
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 
