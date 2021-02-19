@@ -56,10 +56,7 @@ Process can be repeated until terminated by user.
 
 ### Overview
 
-<details>
-  <summary>Robert De laRosa <a href="https://github.com/rdelarosa3" target="_blank">GitHub</a></summary>
-
-  1. Created this in more of a CLI to handle a single repetitive task.  
+  1. Created as a CLI to handle a single repetitive task.  
   2. Use of Maven to simplify build process and use of dependencies.
 
 ### Approach
@@ -79,4 +76,4 @@ Process can be repeated until terminated by user.
 1. Header columns are not counted as received record.
 1. User can keep importing CSV or overwrite existing import. 
  
-</details>
+
