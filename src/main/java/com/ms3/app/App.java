@@ -90,5 +90,7 @@ public class App {
         /* writes files into directory */
         csvParser.writeFailedCsv();
         csvParser.writeLogFile();
+        System.out.println("Files stored in directory: "+fname);
+        System.out.println("----------");
     }
 }
