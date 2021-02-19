@@ -18,18 +18,20 @@ public class CsvParser {
     private int received = 0;  // total received rows excluding header
     private int success = 0;  // total rows successfully verified
     private int failed = 0;  // total rows failed
+    private String fname;
 
-    public CsvParser(String fname){
-        readCSV(fname);
+    public CsvParser(File csvFile, String fileName){
+        fname = fileName;
+        readCSV(csvFile);
         processVerifiedData();
         writeFailedCsv(badCsv);
         writeLogFile();
     }
 
     /** reads CSV and creates a List of String[] from each row **/
-    public void readCSV(String fname){
+    public void readCSV(File fileName){
         System.out.println("Reading CSV Data");
-        try (CSVReader reader = new CSVReader(new FileReader(fname))) {
+        try (CSVReader reader = new CSVReader(new FileReader(fileName))) {
             setrCsv(reader.readAll());
             setReceived(rCsv.size()-1);
         } catch (IOException e) {
@@ -59,7 +61,7 @@ public class CsvParser {
     /** writes a CSV of all failed files **/
     public void writeFailedCsv(List<String[]> stringArray){
         try{
-            CSVWriter writer = new CSVWriter(new FileWriter("bad.csv"));
+            CSVWriter writer = new CSVWriter(new FileWriter(fname+"/"+fname+"-bad.csv"));
             writer.writeAll(stringArray);
             writer.close();
         } catch (IOException e) {
@@ -77,8 +79,6 @@ public class CsvParser {
         } catch (Exception e) {
             badCsv.add(row);
             setFailed();
-            System.err.println(Arrays.toString(row));
-            System.err.println("Holds Incompatible data sending to failed");
         }
 
     }
@@ -87,7 +87,7 @@ public class CsvParser {
         System.out.println("Writing log File");
         String outputString = String.format("%s records received %n%s records successful %n%s records failed",received,success,failed);
         try {
-            FileWriter fw = new FileWriter("myFile.log"); // create a new file with specified file name
+            FileWriter fw = new FileWriter(fname+"/"+fname+".log"); // create a new file with specified file name
             BufferedWriter bw = new BufferedWriter(fw);// create the IO stream on that file
             bw.write(outputString);   // write a string into the IO stream
             bw.close();
