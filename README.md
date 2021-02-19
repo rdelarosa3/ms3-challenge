@@ -68,7 +68,7 @@ Process can be repeated until terminated by user.
 
 ### Assumptions
 
-1. Will create a directory based on each csv file name and store db,csv,log
+1. Will create a directory in project root with the name of csv file and store db,bad.csv,log
 1. All CSV's will hold 10 columns with the exact data type as the ms3interview.csv columns.
 1. Directory, Database and Table will be created based on file name.
 1. Each database will have a table with columns named based on the header from csv file.
