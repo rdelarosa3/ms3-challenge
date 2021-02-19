@@ -12,8 +12,6 @@ public class CsvModel {
      private boolean i;
      private String j;
 
-    public CsvModel(){}
-
     //setter
     public CsvModel(String a, String b, String c, String d, String e, String f, String g, String h, String i, String j) {
         this.a = a;
@@ -119,15 +117,5 @@ public class CsvModel {
 
     public void setJ(String j) {
         this.j = j;
-    }
-
-    public static void main(String[] args) {
-        String str = "$3.20";
-        try{
-            double dbl = Double.parseDouble(str.replaceAll("[^\\d-.]", ""));
-            System.out.println(dbl);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
     }
 }

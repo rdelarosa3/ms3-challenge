@@ -3,4 +3,3 @@ target/
 .idea/
 Config.java
 *.db
-*.csv
