@@ -26,7 +26,7 @@ public class CsvParser {
 
     /** reads CSV and creates a List of String[] from each row **/
     public void readCSV(File fileName){
-        System.out.println("Reading CSV Data");
+        System.out.println(ANSI_BLUE +"Reading CSV Data"+ANSI_RESET);
         try (CSVReader reader = new CSVReader(new FileReader(fileName))) {
             setrCsv(reader.readAll());
             setReceived(rCsv.size()-1);
@@ -37,7 +37,7 @@ public class CsvParser {
 
     /** verifies required fields are present and separates bad rows from good rows **/
     public void processVerifiedData(){
-        System.out.println("Processing Data");
+        System.out.println(ANSI_BLUE +"Processing Data"+ANSI_RESET);
         String[] header = Arrays.copyOfRange(rCsv.get(0),0,10); // get header row
         badCsv.add(header); // add header row to badCsv list
         setHeaders(new ArrayList<>(Arrays.asList(header))); // set headers to use in SQLite table creation
@@ -81,14 +81,14 @@ public class CsvParser {
 
     /** creates log file based on data submitted **/
     public void writeLogFile(){
-        System.out.println("Writing log File");
+        System.out.println(ANSI_BLUE +"Writing log File"+ANSI_RESET);
         String outputString = String.format("%s records received %n%s records successful %n%s records failed",received,success,failed);  // string to write to log file
         try {
             FileWriter fw = new FileWriter(fname+"/"+fname+".log"); // create a new file with specified file name
             BufferedWriter bw = new BufferedWriter(fw);// create the IO stream on that file
             bw.write(outputString);   // writes a string into the IO stream
             bw.close();
-            System.out.println("Log file complete");
+            System.out.println(ANSI_BLUE+"Log file complete"+ANSI_RESET);
         }catch (IOException e){
             System.err.println("Failed to write log file");
             System.err.println(e.getMessage());
@@ -140,4 +140,8 @@ public class CsvParser {
     private void setHeaders(List<String> headers) {
         this.headers = headers;
     }
+
+    /** colors for interface **/
+    public static final String ANSI_BLUE = "\033[0;34m";    // BLUE
+    public static final String ANSI_RESET = "\033[0m";  // Text Reset
 }
