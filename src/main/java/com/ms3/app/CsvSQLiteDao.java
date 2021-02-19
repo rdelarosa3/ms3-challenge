@@ -4,19 +4,20 @@ import java.sql.*;
 import java.util.List;
 
 public class CsvSQLiteDao {
-    private Connection connection;
-    private String jdbcUrl;
-    private String insertString;
-    private String fname;
+    private Connection connection; // use to set connection to sqlite
+    private String jdbcUrl;   // url to use for connection
+    private String insertString; // string to use in insert statement
+    private String fname;  // filename to create db and table
 
     public CsvSQLiteDao(String fileName) {
-        fname  = fileName;
-        jdbcUrl = "jdbc:sqlite:"+ fname +"/"+ fname +".db";
+        fname  = fileName; // gets the filename
+        jdbcUrl = "jdbc:sqlite:"+ fname +"/"+ fname +".db";  // creates path for url
     }
 
+    /** Creates connection to jdbc driver and creates new DB in specified directory based on the file name **/
     public void createDB() {
         try {
-            connection = DriverManager.getConnection(jdbcUrl);
+            connection = DriverManager.getConnection(jdbcUrl);  // create connection
             if (connection != null) {
                 DatabaseMetaData meta = connection.getMetaData();
                 System.out.println("Using Driver Name : " + meta.getDriverName());
@@ -28,11 +29,13 @@ public class CsvSQLiteDao {
         }
     }
 
+    /** creates table in db based on the file name and names columns from csv header **/
     public void createTable(List<String> headers) {
-        StringBuilder sql = new StringBuilder("CREATE TABLE IF NOT EXISTS " + fname + " (");
+        StringBuilder sql = new StringBuilder("CREATE TABLE IF NOT EXISTS " + fname + " ("); // sql table stmnt
         System.out.println("Creating table for DB");
-        int index = 0;
-        insertString = "";
+        int index = 0;  // index value to use in switch
+        insertString = ""; // create string to use in insert sql based on column names
+        // creates table columns and data types from csv header list
         for (String col : headers) {
             switch (index) {
                 case 4:
@@ -62,7 +65,6 @@ public class CsvSQLiteDao {
 
         try {
             Statement stmt = connection.createStatement();
-            // create a new table
             stmt.execute(sql.toString());
             System.out.println("Table Created Successfully");
         } catch (SQLException e) {
@@ -71,9 +73,12 @@ public class CsvSQLiteDao {
         }
     }
 
+    /** inserts values from the Obj model created from csv rows with valid data **/
     public void insert(List<CsvModel> dbData) {
         System.out.println("Inserting data into table");
         try {
+            // Loops through the Obj Models and sets each value by datatype into table.
+            // using prepared stmnt to prevent sql injection
             for (CsvModel c : dbData) {
                 String sql = "INSERT INTO ms3interview (" + insertString + ") VALUES(?,?,?,?,?,?,?,?,?,?)";
                 PreparedStatement pstmt = connection.prepareStatement(sql);

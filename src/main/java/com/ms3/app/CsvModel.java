@@ -1,4 +1,5 @@
 package com.ms3.app;
+/** CSV Model to collect row data in an object to simplify database insertion **/
 
 public class CsvModel {
      private String a;
@@ -12,7 +13,7 @@ public class CsvModel {
      private boolean i;
      private String j;
 
-    //setter
+    // Create object from the row data
     public CsvModel(String a, String b, String c, String d, String e, String f, String g, String h, String i, String j) {
         this.a = a;
         this.b = b;
@@ -25,7 +26,7 @@ public class CsvModel {
         this.i = Boolean.parseBoolean(i);
         this.j = j;
     }
-    // getter
+    // Gets object fields to insert into db
     public CsvModel(String a, String b, String c, String d, String e, String f, double g, boolean h, boolean i, String j) {
         this.a = a;
         this.b = b;
@@ -38,6 +39,8 @@ public class CsvModel {
         this.i = i;
         this.j = j;
     }
+
+    // getters  & setters
 
     public String getA() {
         return a;

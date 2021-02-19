@@ -20,12 +20,8 @@ public class CsvParser {
     private int failed = 0;  // total rows failed
     private String fname;
 
-    public CsvParser(File csvFile, String fileName){
+    public CsvParser(String fileName){
         fname = fileName;
-        readCSV(csvFile);
-        processVerifiedData();
-        writeFailedCsv(badCsv);
-        writeLogFile();
     }
 
     /** reads CSV and creates a List of String[] from each row **/
@@ -59,16 +55,17 @@ public class CsvParser {
     }
 
     /** writes a CSV of all failed files **/
-    public void writeFailedCsv(List<String[]> stringArray){
+    public void writeFailedCsv(){
         try{
-            CSVWriter writer = new CSVWriter(new FileWriter(fname+"/"+fname+"-bad.csv"));
-            writer.writeAll(stringArray);
+            CSVWriter writer = new CSVWriter(new FileWriter(fname+"/"+fname+"-bad.csv")); // creates file to write into directory
+            writer.writeAll(badCsv);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /** creates an Object model from row to validate data type and simplify sql insert stmnts.**/
     public void setDataType(String[] row){
         try{
             CsvModel m = new CsvModel(
@@ -77,19 +74,19 @@ public class CsvParser {
             dbCsv.add(m); // adds verified row to process in SQLite
             setSuccess(); // updates Success amount
         } catch (Exception e) {
-            badCsv.add(row);
-            setFailed();
+            badCsv.add(row); // adds failed to bad csv list
+            setFailed();  // updates Failed amount
         }
-
     }
 
+    /** creates log file based on data submitted **/
     public void writeLogFile(){
         System.out.println("Writing log File");
-        String outputString = String.format("%s records received %n%s records successful %n%s records failed",received,success,failed);
+        String outputString = String.format("%s records received %n%s records successful %n%s records failed",received,success,failed);  // string to write to log file
         try {
             FileWriter fw = new FileWriter(fname+"/"+fname+".log"); // create a new file with specified file name
             BufferedWriter bw = new BufferedWriter(fw);// create the IO stream on that file
-            bw.write(outputString);   // write a string into the IO stream
+            bw.write(outputString);   // writes a string into the IO stream
             bw.close();
             System.out.println("Log file complete");
         }catch (IOException e){
