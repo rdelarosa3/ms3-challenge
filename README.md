@@ -76,8 +76,7 @@ Process can be repeated until terminated by user.
 1. Directory, Database and Table will be created based on file name.
 1. Each database will have a table with columns named based on the header from csv file.
 1. If column data type is not same as data type from original csv add to failed csv file.
+1. Header columns are not counted as received record.
 1. User can keep importing CSV or overwrite existing import. 
-  
  
-  5. 
 </details>
